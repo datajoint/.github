@@ -1,0 +1,4 @@
+{
+    "name": "u24_element_tag_to_release",
+    "description": "U24 element CI triggered by release tagging *.*.* or test*.*.*"
+}

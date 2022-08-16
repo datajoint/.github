@@ -1,2 +1,3 @@
-# .github
-Organizational starter workflows for public repositories
+# DataJoint Organizational Configs
+
+## DataJoint Starter Workflows

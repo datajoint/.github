@@ -1,5 +1,6 @@
 {
     "conventionalCommits.scopes": [
-        "element-starter-workflow"
+        "element-starter-workflow",
+        "workflow-starter-workflow"
     ]
 }

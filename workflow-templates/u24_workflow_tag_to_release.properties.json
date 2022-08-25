@@ -1,0 +1,4 @@
+{
+    "name": "u24_workflow_tag_to_release",
+    "description": "U24 workflow CI triggered by release tagging *.*.*"
+}

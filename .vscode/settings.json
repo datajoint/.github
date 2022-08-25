@@ -1,5 +1,6 @@
 {
     "conventionalCommits.scopes": [
-        "element-starter-workflow"
+        "U24 Element",
+        "U24 Workflow"
     ]
 }

@@ -1,4 +1,4 @@
-name: u24_workflow_before_release
+name: u24_workflow_before_release_0.0.1
 on:
   pull_request:
   push:

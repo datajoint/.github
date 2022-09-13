@@ -1,4 +1,4 @@
-name: u24_workflow_release_call
+name: u24_workflow_release_call_0.0.1
 
 on:
   workflow_run:

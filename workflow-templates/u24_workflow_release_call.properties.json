@@ -1,4 +1,4 @@
 {
-    "name": "u24_workflow_release_call_0.0.1",
+    "name": "u24_workflow_release_call",
     "description": "U24 workflow CD triggered by u24_workflow_tag_to_release completed"
 }

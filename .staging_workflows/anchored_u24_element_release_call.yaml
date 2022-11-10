@@ -1,8 +1,8 @@
-name: u24_element_release_call_0.0.1
+name: u24_element_release_call
 
 on:
   workflow_run:
-    workflows: ["u24_element_tag_to_release_0.0.1"]
+    workflows: ["u24_element_tag_to_release"]
     types:
       - completed
 
@@ -48,6 +48,7 @@ jobs:
     secrets:
       TWINE_USERNAME: ${{secrets.TWINE_TEST_USERNAME}}
       TWINE_PASSWORD: ${{secrets.TWINE_TEST_PASSWORD}}
+      GOOGLE_ANALYTICS_KEY: ${{secrets.GOOGLE_ANALYTICS_KEY}}
   
   call_u24_elements_release_alpine:
     !!merge <<: *$STAGE-release-if
@@ -57,3 +58,4 @@ jobs:
     secrets:
       TWINE_USERNAME: ${{secrets.TWINE_USERNAME}}
       TWINE_PASSWORD: ${{secrets.TWINE_PASSWORD}}
+      GOOGLE_ANALYTICS_KEY: ${{secrets.GOOGLE_ANALYTICS_KEY}}

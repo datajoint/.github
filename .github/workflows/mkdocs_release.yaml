@@ -1,15 +1,15 @@
 name: mkdocs_release
 on:
   workflow_call:
-    secrets:
-      UPSTREAM_GITHUB_TOKEN:
-        required: true
+    # secrets:
+    #   UPSTREAM_GITHUB_TOKEN:
+    #     required: true
 
 jobs:
   mkdocs-release:
     runs-on: ubuntu-latest
-    env:
-      UPSTREAM_GITHUB_TOKEN: ${{ secrets.UPSTREAM_GITHUB_TOKEN }}
+    # env:
+    #   UPSTREAM_GITHUB_TOKEN: ${{ secrets.UPSTREAM_GITHUB_TOKEN }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -19,6 +19,6 @@ jobs:
           REPO_UNDERSCORES=${REPO_HYPHENS//-/_}
           export MODE=PUSH
           export PACKAGE=${REPO_UNDERSCORES}
-          export UPSTREAM_REPO=https://action-user:${UPSTREAM_GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          export UPSTREAM_REPO=https://action-user:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           export HOST_UID=$(id -u)
           docker compose -f docs/docker-compose.yaml up --exit-code-from docs --build

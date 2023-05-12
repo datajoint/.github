@@ -1,15 +1,15 @@
 name: mkdocs_release
 on:
   workflow_call:
-    # secrets:
-    #   UPSTREAM_GITHUB_TOKEN:
-    #     required: true
+    secrets:
+      UPSTREAM_GITHUB_TOKEN:
+        required: true
 
 jobs:
   mkdocs-release:
     runs-on: ubuntu-latest
-    # env:
-    #   UPSTREAM_GITHUB_TOKEN: ${{ secrets.UPSTREAM_GITHUB_TOKEN }}
+    env:
+      UPSTREAM_GITHUB_TOKEN: ${{ secrets.UPSTREAM_GITHUB_TOKEN }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3

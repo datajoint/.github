@@ -1,12 +1,16 @@
 name: mkdocs_release
 on:
   workflow_call:
+    secrets:
+      - GITHUB_TOKEN
 
 jobs:
   mkdocs-release:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v3
       - name: Deploy docs
         run: |

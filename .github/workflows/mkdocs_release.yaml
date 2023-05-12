@@ -2,7 +2,8 @@ name: mkdocs_release
 on:
   workflow_call:
     secrets:
-      - GITHUB_TOKEN
+      GITHUB_TOKEN:
+        required: true
 
 jobs:
   mkdocs-release:

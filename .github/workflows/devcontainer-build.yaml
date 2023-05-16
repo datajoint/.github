@@ -1,0 +1,29 @@
+name: Build DevContainer Image
+on:
+  workflow_call:
+jobs:
+  devcontainer-build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: |
+        sudo curl https://github.com/mikefarah/yq/releases/download/3.4.1/yq_linux_amd64 \
+            -Lo /usr/local/bin/yq
+        sudo chmod +x /usr/local/bin/yq
+    - name: Determine metadata
+      run: |
+        PIP_PACKAGE_NAME=$(ls */version.py | cut -d '/' -f 1)
+        echo "PIP_PACKAGE_NAME=${PIP_PACKAGE_NAME}" >> $GITHUB_ENV
+    - name: Build image
+      run: |
+        IMAGE=$(yq r ./.devcontainer/local/docker-compose.yaml 'services.app.image')
+        docker build -t "${IMAGE}" -f ./.devcontainer/Dockerfile .
+        docker save "${IMAGE}" | \
+            gzip > "image-devcontainer-${PIP_PACKAGE_NAME}.tar.gz"
+    - name: Upload image artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: image-devcontainer-${{env.PIP_PACKAGE_NAME}}
+        path: "image-devcontainer-${{env.PIP_PACKAGE_NAME}}.tar.gz"
+        retention-days: 1

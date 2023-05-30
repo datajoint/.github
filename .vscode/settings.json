@@ -1,6 +1,7 @@
 {
     "conventionalCommits.scopes": [
         "U24 Element",
-        "U24 Workflow"
+        "U24 Workflow",
+        "reusable-workflows"
     ]
 }

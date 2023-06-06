@@ -30,13 +30,14 @@ jobs:
         with:
           path: ./CHANGELOG.md
           version: ${{env.PKG_VERSION}}
-      - uses: cardinalby/git-get-release-action@v1
+      - name: Check if release already exists
+        uses: cardinalby/git-get-release-action@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          tag: '1.2.3' 
+          tag: ${{steps.changelog_reader.outputs.version}}
       - name: Create GH release
-        id: create_gh_release
+        if: failure() || steps.check_release.outputs.release_id == ''
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -46,6 +47,13 @@ jobs:
           body: ${{steps.changelog_reader.outputs.changes}}
           prerelease: ${{steps.changelog_reader.outputs.status == 'prereleased'}}
           draft: ${{steps.changelog_reader.outputs.status == 'unreleased'}}
-      - name: Get GH release upload URL
+      - name: Get release upload URL
+        id: get_release_upload_url
+        uses: cardinalby/git-get-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tag: ${{steps.changelog_reader.outputs.version}}
+      - name: Output release upload URL
         run: |
-          echo "gh_release_upload_url = ${{steps.create_gh_release.outputs.upload_url}}" >> $GITHUB_OUTPUT
+          echo "gh_release_upload_url = ${{steps.get_release_upload_url.outputs.upload_url}}" >> $GITHUB_OUTPUT

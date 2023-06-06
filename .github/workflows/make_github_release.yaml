@@ -36,6 +36,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           tag: ${{steps.changelog_reader.outputs.version}}
+        continue-on-error: true
       - name: Create GH release
         if: failure() || steps.check_release.outputs.release_id == ''
         uses: actions/create-release@v1

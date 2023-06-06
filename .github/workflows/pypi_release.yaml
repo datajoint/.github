@@ -39,7 +39,7 @@ jobs:
           export CHECK_EXIST=$(curl -sI https://pypi.org/project/${{env.SDIST_PKG_NAME}}/${{env.PKG_VERSION}}/ | head -n 1 | cut -d$' ' -f2)
           if [ "$CHECK_EXIST" == "404" ]; then
             echo "Uploading Package: ${{env.SDIST_PKG_NAME}} Version: ${{env.PKG_VERSION}} to pypi.org"
-            pip install twine && python -m twine upload ./dist/*
+            pip install twine && python -m twine upload --repository testpypi ./dist/*
           else
             echo "Package: ${{env.SDIST_PKG_NAME}} Version: ${{env.PKG_VERSION}} already exists on pypi.org"
           fi

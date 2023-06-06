@@ -30,11 +30,11 @@ jobs:
         with:
           path: ./CHANGELOG.md
           version: ${{env.PKG_VERSION}}
-      # - name: Delete tag and release
-      #   uses: dev-drprasad/delete-tag-and-release@v1.0
-      #   with:
-      #     tag_name: ${{steps.changelog_reader.outputs.version}}
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: cardinalby/git-get-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tag: '1.2.3' 
       - name: Create GH release
         id: create_gh_release
         uses: actions/create-release@v1

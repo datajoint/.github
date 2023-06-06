@@ -1,0 +1,22 @@
+name: run_pytest
+on:
+  workflow_call:
+
+jobs:
+  run_pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        py_ver: ["3.8","3.9"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{matrix.py_ver}}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{matrix.py_ver}}
+      - name: Install dependencies
+        run: pip install .
+      - name: Run pytest
+        run: |
+          pip install pytest
+          pytest tests/

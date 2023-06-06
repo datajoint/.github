@@ -1,0 +1,58 @@
+name: make_github_release
+on:
+  workflow_call:
+    outputs:
+      release_upload_url:
+        value: ${{ jobs.make_github_release.outputs.gh_release_upload_url }}  
+
+jobs:
+  make_github_release:
+    runs-on: ubuntu-latest
+    outputs:
+      gh_release_upload_url: ${{ steps.get_release_upload_url.outputs.upload_url }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - name: Determine package version
+        run: |
+          PKG_NAME=$(python3 -c "print([p for p in __import__('setuptools').find_packages() if '.' not in p][0])")
+          SDIST_PKG_NAME=$(echo ${PKG_NAME} | sed 's|_|-|g')
+          PKG_VERSION=$(cat ${PKG_NAME}/version.py | grep -oP '\d+\.\d+\.[a-z0-9]+')
+          echo "PKG_NAME=${PKG_NAME}" >> $GITHUB_ENV
+          echo "PKG_VERSION=${PKG_VERSION}" >> $GITHUB_ENV
+          echo "SDIST_PKG_NAME=${SDIST_PKG_NAME}" >> $GITHUB_ENV
+      - name: Get changelog entry
+        id: changelog_reader
+        uses: guzman-raphael/changelog-reader-action@v5
+        with:
+          path: ./CHANGELOG.md
+          version: ${{env.PKG_VERSION}}
+      - name: Check if release already exists
+        id: check_release
+        uses: cardinalby/git-get-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tag: ${{steps.changelog_reader.outputs.version}}
+        continue-on-error: true
+      - name: Create GH release
+        if: steps.check_release.outputs.id == ''
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tag_name: ${{steps.changelog_reader.outputs.version}}
+          release_name: ${{steps.changelog_reader.outputs.version}}
+          body: ${{steps.changelog_reader.outputs.changes}}
+          prerelease: ${{steps.changelog_reader.outputs.status == 'prereleased'}}
+          draft: ${{steps.changelog_reader.outputs.status == 'unreleased'}}
+      - name: Get release upload URL
+        id: get_release_upload_url
+        uses: cardinalby/git-get-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tag: ${{steps.changelog_reader.outputs.version}}

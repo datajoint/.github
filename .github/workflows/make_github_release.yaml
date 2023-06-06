@@ -37,7 +37,7 @@ jobs:
       - name: Create GH release
         id: create_gh_release
         uses: actions/create-release@v1
-        if: ${{ !contains(env.TWINE_REPO, 'testpypi') }}
+        if: success() || failure()
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:

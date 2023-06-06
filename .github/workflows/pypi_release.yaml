@@ -19,7 +19,7 @@ jobs:
       matrix:
         py_ver: ["3.9"]
     env:
-      UPLOAD_URL: ${{ github.event.inputs.UPLOAD_URL }}
+      UPLOAD_URL: ${{ inputs.UPLOAD_URL }}
       TWINE_USERNAME: ${{secrets.TWINE_USERNAME}}
       TWINE_PASSWORD: ${{secrets.TWINE_PASSWORD}}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

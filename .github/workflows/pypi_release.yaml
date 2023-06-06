@@ -1,6 +1,10 @@
 name: pypi_release
 on:
   workflow_call:
+    inputs:
+      UPLOAD_URL:
+        description: 'Github Release Upload URL'
+        required: true
     secrets:
       TWINE_USERNAME:
         required: true
@@ -34,12 +38,34 @@ jobs:
       - name: Build package
         run: |
           pip install wheel && python setup.py bdist_wheel sdist
+      - name: Determine pip artifact paths
+        run: |
+          echo "PKG_WHEEL_PATH=$(ls dist/${PKG_NAME}-*.whl)" >> $GITHUB_ENV
+          echo "PKG_SDIST_PATH=$(ls dist/${SDIST_PKG_NAME}-*.tar.gz)" >> $GITHUB_ENV
+      - name: Upload pip wheel asset to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          upload_url: ${{env.UPLOAD_URL}}
+          asset_path: ${{env.PKG_WHEEL_PATH}}
+          asset_name: pip-${{env.PKG_NAME}}-${{env.PKG_VERSION}}.whl
+          asset_content_type: application/zip
+      - name: Upload pip sdist asset to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          upload_url: ${{env.UPLOAD_URL}}
+          asset_path: ${{env.PKG_SDIST_PATH}}
+          asset_name: pip-${{env.SDIST_PKG_NAME}}-${{env.PKG_VERSION}}.tar.gz
+          asset_content_type: application/gzip
       - name: Publish package
         run: |
           export CHECK_EXIST=$(curl -sI https://pypi.org/project/${{env.SDIST_PKG_NAME}}/${{env.PKG_VERSION}}/ | head -n 1 | cut -d$' ' -f2)
           if [ "$CHECK_EXIST" == "404" ]; then
             echo "Uploading Package: ${{env.SDIST_PKG_NAME}} Version: ${{env.PKG_VERSION}} to pypi.org"
-            pip install twine && python -m twine upload --repository testpypi ./dist/*
+            pip install twine && python -m twine upload ./dist/*
           else
             echo "Package: ${{env.SDIST_PKG_NAME}} Version: ${{env.PKG_VERSION}} already exists on pypi.org"
           fi

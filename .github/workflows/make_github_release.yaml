@@ -3,13 +3,13 @@ on:
   workflow_call:
     outputs:
       release_upload_url:
-        value: ${{ jobs.make_github_release.outputs.gh_release_upload_url }}
+        value: ${{ jobs.make_github_release.outputs.gh_release_upload_url }}  
 
 jobs:
   make_github_release:
     runs-on: ubuntu-latest
     outputs:
-      gh_release_upload_url: ${{ steps.create_gh_release.outputs.upload_url }}
+      gh_release_upload_url: ${{ steps.get_release_upload_url.outputs.upload_url }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -56,6 +56,3 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           tag: ${{steps.changelog_reader.outputs.version}}
-      - name: Output release upload URL
-        run: |
-          echo "gh_release_upload_url = ${{steps.get_release_upload_url.outputs.upload_url}}" >> $GITHUB_OUTPUT

@@ -31,6 +31,7 @@ jobs:
           path: ./CHANGELOG.md
           version: ${{env.PKG_VERSION}}
       - name: Check if release already exists
+        id: check_release
         uses: cardinalby/git-get-release-action@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -38,7 +39,7 @@ jobs:
           tag: ${{steps.changelog_reader.outputs.version}}
         continue-on-error: true
       - name: Create GH release
-        if: failure() || steps.check_release.outputs.release_id == ''
+        if: failure() && steps.check_release.outputs.id == ''
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

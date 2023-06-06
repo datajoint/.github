@@ -4,6 +4,7 @@ on:
     inputs:
       UPLOAD_URL:
         description: 'Github Release Upload URL'
+        type: string
         required: true
     secrets:
       TWINE_USERNAME:

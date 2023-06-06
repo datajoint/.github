@@ -1,0 +1,45 @@
+name: pypi_release
+on:
+  workflow_call:
+    secrets:
+      TWINE_USERNAME:
+        required: true
+      TWINE_PASSWORD:
+        required: true
+
+jobs:
+  pypi-release:
+  runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        py_ver: ["3.9"]
+    env:
+      TWINE_USERNAME: ${{secrets.TWINE_USERNAME}}
+      TWINE_PASSWORD: ${{secrets.TWINE_PASSWORD}}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{matrix.py_ver}}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{matrix.py_ver}}
+      - name: Determine package version
+        run: |
+          PKG_NAME=$(python3 -c "print([p for p in __import__('setuptools').find_packages() if '.' not in p][0])")
+          SDIST_PKG_NAME=$(echo ${PKG_NAME} | sed 's|_|-|g')
+          PKG_VERSION=$(cat ${PKG_NAME}/version.py | grep -oP '\d+\.\d+\.[a-z0-9]+')
+          echo "PKG_NAME=${PKG_NAME}" >> $GITHUB_ENV
+          echo "PKG_VERSION=${PKG_VERSION}" >> $GITHUB_ENV
+          echo "SDIST_PKG_NAME=${SDIST_PKG_NAME}" >> $GITHUB_ENV
+      - name: Build package
+        run: |
+          pip install wheel && python setup.py bdist_wheel sdist
+      - name: Publish package
+        run: |
+          export CHECK_EXIST=$(curl -sI https://pypi.org/project/${{env.SDIST_PKG_NAME}}/${{env.PKG_VERSION}}/ | head -n 1 | cut -d$' ' -f2)
+          if [ "$CHECK_EXIST" == "404" ]; then
+            echo "Uploading Package: ${{env.SDIST_PKG_NAME}} Version: ${{env.PKG_VERSION}} to pypi.org"
+            pip install twine && python -m twine upload ./dist/*
+          else
+            echo "Package: ${{env.SDIST_PKG_NAME}} Version: ${{env.PKG_VERSION}} already exists on pypi.org"
+          fi

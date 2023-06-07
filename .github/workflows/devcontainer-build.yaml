@@ -12,6 +12,7 @@ jobs:
             -Lo /usr/local/bin/yq
         sudo chmod +x /usr/local/bin/yq
         export PAHT=$PATH:/usr/local/bin
+        yq --help
     - name: Determine metadata
       run: |
         PIP_PACKAGE_NAME=$(ls */version.py | cut -d '/' -f 1)

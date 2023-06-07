@@ -8,11 +8,10 @@ jobs:
     - uses: actions/checkout@v3
     - name: Install dependencies
       run: |
-        sudo curl https://github.com/mikefarah/yq/releases/download/4.34.1/yq_linux_amd64 \
+        sudo curl https://github.com/mikefarah/yq/releases/download/4.33.3/yq_linux_amd64 \
             -Lo /usr/local/bin/yq
         sudo chmod +x /usr/local/bin/yq
-        export PAHT=$PATH:/usr/local/bin
-        yq --help
+        yq --version
     - name: Determine metadata
       run: |
         PIP_PACKAGE_NAME=$(ls */version.py | cut -d '/' -f 1)

@@ -18,7 +18,7 @@ jobs:
         echo "PIP_PACKAGE_NAME=${PIP_PACKAGE_NAME}" >> $GITHUB_ENV
     - name: Build image
       run: |
-        IMAGE=$(yq eval '.services.app.image' ./.devcontainer/local/docker-compose.yaml)
+        IMAGE=$(yq eval '.services.app.image' ./.devcontainer/docker-compose.yaml)
         docker build -t "${IMAGE}" -f ./.devcontainer/Dockerfile .
         docker save "${IMAGE}" | \
             gzip > "image-devcontainer-${PIP_PACKAGE_NAME}.tar.gz"

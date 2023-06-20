@@ -33,5 +33,5 @@ jobs:
         password: ${{secrets.DOCKERHUB_TOKEN}}
     - name: Publish image
       run: |
-        IMAGE=$(yq r ./.devcontainer/local/docker-compose.yaml 'services.app.image')
+        IMAGE=$(yq r ./.devcontainer/docker-compose.yaml 'services.app.image')
         docker push "${IMAGE}"

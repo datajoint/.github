@@ -18,7 +18,7 @@ jobs:
           python-version: 3.x
       - name: Determine package version
         run: |
-          PKG_NAME=$(python3 -c "print([p for p in __import__('setuptools').find_packages() if '.' not in p][0])")
+          PKG_NAME=$(python3 -c "print([p for p in __import__('setuptools').find_packages() if all([x not in p for x in ['.', 'tests']])][0])")
           SDIST_PKG_NAME=$(echo ${PKG_NAME} | sed 's|_|-|g')
           PKG_VERSION=$(cat ${PKG_NAME}/version.py | grep -oP '\d+\.\d+\.[a-z0-9]+')
           echo "PKG_NAME=${PKG_NAME}" >> $GITHUB_ENV

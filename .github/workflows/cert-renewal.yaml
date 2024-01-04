@@ -88,9 +88,9 @@ jobs:
           cert_contact_email = "${{inputs.CERT_CONTACT_EMAIL}}"
           cert_staging = "${{inputs.CERT_STAGING}}"
           route53_zone_id = "${{secrets.ROUTE53_ZONE_ID}}"
-          route53_zone_name = "${{inputs.ROUTE53_ZONE_NAME}}"
           route53_record_name = "${{inputs.ROUTE53_RECORD_NAME}}"
           EOF
+          # route53_zone_name = "${{inputs.ROUTE53_ZONE_NAME}}"
           # INSTANCE_VPC_SECURITY_GROUP_IDS = $(echo "${{secrets.INSTANCE_VPC_SECURITY_GROUP_IDS}}" | base64 -d)
           # echo "instance_vpc_security_group_ids = ${INSTANCE_VPC_SECURITY_GROUP_IDS}" >> input.tfvars
           # echo "instance_subnet_id = \"${{secrets.INSTANCE_SUBNET_ID}}\"" >> input.tfvars

@@ -102,7 +102,7 @@ jobs:
           ## get the instance public ip
           # INSTANCE_PUBLIC_IP=$(terraform output -raw auto-letsencrypt-instance-public-ip)
           INSTANCE_PUBLIC_IP=18.119.131.74
-          cat $INSTANCE_PUBLIC_IP
+          echo $INSTANCE_PUBLIC_IP
           ## check if the cert is ready
           time=0
           while [ $(ssh -i $GITHUB_WORKSPACE/ssh_private_key ubuntu@$INSTANCE_PUBLIC_IP "cloud-init status") != "status: done" ]

@@ -82,7 +82,7 @@ jobs:
           ls -lah $GITHUB_WORKSPACE
 
           cd $GITHUB_WORKSPACE/manual-letsencrypt/terraform
-          INSTANCE_VPC_SECURITY_GROUP_IDS = $(echo "${{secrets.INSTANCE_VPC_SECURITY_GROUP_IDS}}" | base64 -d)
+          INSTANCE_VPC_SECURITY_GROUP_IDS=$(echo "${{secrets.INSTANCE_VPC_SECURITY_GROUP_IDS}}" | base64 -d)
           cat << EOF > input.tfvars
           instance_vpc_security_group_ids = ${INSTANCE_VPC_SECURITY_GROUP_IDS}
           instance_subnet_id = \"${{secrets.INSTANCE_SUBNET_ID}}\"

@@ -122,18 +122,18 @@ jobs:
           ls -lah $GITHUB_WORKSPACE/caller-repo/${{inputs.CALLER_REPO_SUBPATH_FOR_CERT}}
           terraform destroy -auto-approve -var-file=input.tfvars -input=false
 
-          # cd $GITHUB_WORKSPACE/caller-repo
-          # git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          # git config --global user.name "github-actions[bot]"
-          # NEW_BRANCH=cert-update-$(date '+%Y-%m-%d')
-          # git switch -c $NEW_BRANCH
-          # git add .
-          # git status
-          # git commit -m "Update cert $(date '+%Y-%m-%d')"
-          # git push
-          # ## make a PR
-          # gh pr create -b master -H $NEW_BRANCH \
-          #   --title "Update cert $(date '+%Y-%m-%d')" --body "Update cert $(date '+%Y-%m-%d')" \
-          #   --reviewer ${{inputs.PR_REVIEWERS}}
+          cd $GITHUB_WORKSPACE/caller-repo
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          NEW_BRANCH=cert-update-$(date '+%Y-%m-%d')
+          git switch -c $NEW_BRANCH
+          git add .
+          git status
+          git commit -m "Update cert $(date '+%Y-%m-%d')"
+          git push
+          ## make a PR
+          gh pr create -b master -H $NEW_BRANCH \
+            --title "Update cert $(date '+%Y-%m-%d')" --body "Update cert $(date '+%Y-%m-%d')" \
+            --reviewer ${{inputs.PR_REVIEWERS}}
 
       

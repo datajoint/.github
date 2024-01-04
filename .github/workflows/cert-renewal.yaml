@@ -36,26 +36,19 @@ on:
     secrets:
       ROUTE53_ZONE_ID:
         description: 'Route53 Hosted Zone ID'
-        type: string
         required: true
       INSTANCE_VPC_SECURITY_GROUP_IDS:
-        type: string
         required: true
       INSTANCE_SUBNET_ID:
-        type: string
         required: true
       AWS_DEFAULT_REGION:
-        type: string
         required: true
       AWS_ACCESS_KEY_ID:
-        type: string
         required: true
       AWS_SECRET_ACCESS_KEY:
-        type: string
         required: true
       SSH_PRIVATE_KEY:
         description: 'ssh private key to access the instance in base64 encoded'
-        type: string
         required: true
 
 jobs:

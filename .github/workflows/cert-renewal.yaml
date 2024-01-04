@@ -62,7 +62,7 @@ jobs:
       - name: Checkout manual-letsencrypt
         uses: actions/checkout@v4
         with:
-          github-server-url: ${{inputs.MANUAL_LETSENCRYPT_REPO}}
+          repository: ${{inputs.MANUAL_LETSENCRYPT_REPO}}
           ref: ${{inputs.MANUAL_LETSENCRYPT_BRANCH}}
           path: manual-letsencrypt
       - name: Setup Terraform

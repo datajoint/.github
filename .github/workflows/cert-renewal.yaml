@@ -118,7 +118,7 @@ jobs:
           done
           ## get the generated cert
           scp -oStrictHostKeyChecking=no -i $GITHUB_WORKSPACE/ssh_private_key \
-            ubuntu@$INSTANCE_PUBLIC_IP:/manual-letsencrypt/letsencrypt/letsencrypt-keys/live/${{inputs.ROUTE53_RECORD_NAME}}.${{inputs.ROUTE53_ZONE_NAME}}/"{fullchain.pem,prikey.pem}" \
+            ubuntu@$INSTANCE_PUBLIC_IP:/manual-letsencrypt/letsencrypt/letsencrypt-keys/live/${{inputs.ROUTE53_RECORD_NAME}}.${{inputs.ROUTE53_ZONE_NAME}}/"{fullchain.pem,privkey.pem}" \
             $GITHUB_WORKSPACE/caller-repo/${{inputs.CALLER_REPO_SUBPATH_FOR_CERT}}
           ls -lah $GITHUB_WORKSPACE/caller-repo/${{inputs.CALLER_REPO_SUBPATH_FOR_CERT}}
           # terraform destroy -auto-approve -var-file=input.tfvars -input=false

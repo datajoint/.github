@@ -22,7 +22,7 @@ on:
       MANUAL_LETSENCRYPT_REPO:
         description: 'manual-letsencrypt repo useful to work with dev fork'
         type: string
-        default: 'https://github.com/datajoint/manual-letsencrypt.git'
+        default: 'datajoint/manual-letsencrypt'
       MANUAL_LETSENCRYPT_BRANCH:
         description: 'manual-letsencrypt repo useful to work with dev branch'
         type: string
@@ -63,7 +63,7 @@ jobs:
       - name: Checkout manual-letsencrypt
         uses: actions/checkout@v4
         with:
-          repository: datajoint/manual-letsencrypt
+          repository: ${{inputs.MANUAL_LETSENCRYPT_REPO}}
           ref: ${{inputs.MANUAL_LETSENCRYPT_BRANCH}}
           path: manual-letsencrypt
       - name: Setup Terraform

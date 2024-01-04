@@ -108,8 +108,8 @@ jobs:
           do
             sleep 60
             time=$((time+60))
-            echo "INFO :: Waiting for SSL certs to be generated. Time elapsed: $${time} seconds"
-            if [ $${time} -gt 900 ]; then
+            echo "INFO :: Waiting for SSL certs to be generated. Time elapsed: ${time} seconds"
+            if [ ${time} -gt 900 ]; then
               echo "ERROR :: Timeout waiting for SSL certs to be generated on $INSTANCE_PUBLIC_IP"
               ssh -oStrictHostKeyChecking=no -i $GITHUB_WORKSPACE/ssh_private_key ubuntu@$INSTANCE_PUBLIC_IP "cat /var/log/cloud-init-output.log"
               exit 1

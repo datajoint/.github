@@ -130,7 +130,7 @@ jobs:
           git add .
           git status
           git commit -m "Update cert $(date '+%Y-%m-%d')"
-          git push
+          git push --set-upstream origin $NEW_BRANCH
           ## make a PR
           gh pr create -b master -H $NEW_BRANCH \
             --title "Update cert $(date '+%Y-%m-%d')" --body "Update cert $(date '+%Y-%m-%d')" \

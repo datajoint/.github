@@ -63,7 +63,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           github-server-url: ${{inputs.MANUAL_LETSENCRYPT_REPO}}
-          ref: refs/remotes/origin/${{inputs.MANUAL_LETSENCRYPT_BRANCH}}
+          ref: ${{inputs.MANUAL_LETSENCRYPT_BRANCH}}
           path: manual-letsencrypt
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3

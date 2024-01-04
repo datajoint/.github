@@ -51,7 +51,7 @@ on:
       SSH_PRIVATE_KEY:
         description: 'ssh private key to access the instance in base64 encoded'
         required: true
-        
+
 jobs:
   cert-renewal:
     runs-on: ubuntu-latest
@@ -76,57 +76,58 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ## make ssh private key file in $GITHUB_WORKSPACE and chmod 400
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > $GITHUB_WORKSPACE/ssh_private_key
-          chmod 400 $GITHUB_WORKSPACE/ssh_private_key
-          ls -lah $GITHUB_WORKSPACE
+          # ## make ssh private key file in $GITHUB_WORKSPACE and chmod 400
+          # echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > $GITHUB_WORKSPACE/ssh_private_key
+          # chmod 400 $GITHUB_WORKSPACE/ssh_private_key
+          # ls -lah $GITHUB_WORKSPACE
 
-          cd $GITHUB_WORKSPACE/manual-letsencrypt/terraform
-          INSTANCE_VPC_SECURITY_GROUP_IDS=$(echo "${{secrets.INSTANCE_VPC_SECURITY_GROUP_IDS}}" | base64 -d)
-          cat << EOF > input.tfvars
-          instance_vpc_security_group_ids = ${INSTANCE_VPC_SECURITY_GROUP_IDS}
-          instance_subnet_id = "${{secrets.INSTANCE_SUBNET_ID}}"
-          cert_contact_email = "${{inputs.CERT_CONTACT_EMAIL}}"
-          cert_staging = "${{inputs.CERT_STAGING}}"
-          route53_zone_id = "${{secrets.ROUTE53_ZONE_ID}}"
-          route53_record_name = "${{inputs.ROUTE53_RECORD_NAME}}"
-          route53_zone_name = "${{inputs.ROUTE53_ZONE_NAME}}"
-          manual_letsencrypt_repo = "${{inputs.MANUAL_LETSENCRYPT_REPO}}"
-          manual_letsencrypt_branch = "${{inputs.MANUAL_LETSENCRYPT_BRANCH}}"
-          EOF
-          cat input.tfvars
+          # cd $GITHUB_WORKSPACE/manual-letsencrypt/terraform
+          # INSTANCE_VPC_SECURITY_GROUP_IDS=$(echo "${{secrets.INSTANCE_VPC_SECURITY_GROUP_IDS}}" | base64 -d)
+          # cat << EOF > input.tfvars
+          # instance_vpc_security_group_ids = ${INSTANCE_VPC_SECURITY_GROUP_IDS}
+          # instance_subnet_id = "${{secrets.INSTANCE_SUBNET_ID}}"
+          # cert_contact_email = "${{inputs.CERT_CONTACT_EMAIL}}"
+          # cert_staging = "${{inputs.CERT_STAGING}}"
+          # route53_zone_id = "${{secrets.ROUTE53_ZONE_ID}}"
+          # route53_record_name = "${{inputs.ROUTE53_RECORD_NAME}}"
+          # route53_zone_name = "${{inputs.ROUTE53_ZONE_NAME}}"
+          # manual_letsencrypt_repo = "${{inputs.MANUAL_LETSENCRYPT_REPO}}"
+          # manual_letsencrypt_branch = "${{inputs.MANUAL_LETSENCRYPT_BRANCH}}"
+          # EOF
+          # cat input.tfvars
 
-          terraform init
-          terraform plan -var-file=input.tfvars -input=false
-          terraform apply -auto-approve -var-file=input.tfvars -input=false
-          ## get the instance public ip
-          INSTANCE_PUBLIC_IP=$(terraform output -raw auto-letsencrypt-instance-public-ip)
-          echo $INSTANCE_PUBLIC_IP
-          ## check if the cert is ready
-          time=0
-          while [ "$(ssh -oStrictHostKeyChecking=no -i $GITHUB_WORKSPACE/ssh_private_key ubuntu@$INSTANCE_PUBLIC_IP "cloud-init status")" != "status: done" ]
-          do
-            sleep 60
-            time=$((time+60))
-            echo "INFO :: Waiting for SSL certs to be generated. Time elapsed: ${time} seconds"
-            if [ ${time} -gt 900 ]; then
-              echo "ERROR :: Timeout waiting for SSL certs to be generated on $INSTANCE_PUBLIC_IP"
-              ssh -oStrictHostKeyChecking=no -i $GITHUB_WORKSPACE/ssh_private_key ubuntu@$INSTANCE_PUBLIC_IP "cat /var/log/cloud-init-output.log"
-              exit 1
-            fi
-          done
-          ## get the generated cert
-          scp -oStrictHostKeyChecking=no -i $GITHUB_WORKSPACE/ssh_private_key \
-            ubuntu@$INSTANCE_PUBLIC_IP:/manual-letsencrypt/letsencrypt/letsencrypt-keys/live/${{inputs.ROUTE53_RECORD_NAME}}.${{inputs.ROUTE53_ZONE_NAME}}/"{fullchain.pem,privkey.pem}" \
-            $GITHUB_WORKSPACE/caller-repo/${{inputs.CALLER_REPO_SUBPATH_FOR_CERT}}
-          ls -lah $GITHUB_WORKSPACE/caller-repo/${{inputs.CALLER_REPO_SUBPATH_FOR_CERT}}
-          terraform destroy -auto-approve -var-file=input.tfvars -input=false
+          # terraform init
+          # terraform plan -var-file=input.tfvars -input=false
+          # terraform apply -auto-approve -var-file=input.tfvars -input=false
+          # ## get the instance public ip
+          # INSTANCE_PUBLIC_IP=$(terraform output -raw auto-letsencrypt-instance-public-ip)
+          # echo $INSTANCE_PUBLIC_IP
+          # ## check if the cert is ready
+          # time=0
+          # while [ "$(ssh -oStrictHostKeyChecking=no -i $GITHUB_WORKSPACE/ssh_private_key ubuntu@$INSTANCE_PUBLIC_IP "cloud-init status")" != "status: done" ]
+          # do
+          #   sleep 60
+          #   time=$((time+60))
+          #   echo "INFO :: Waiting for SSL certs to be generated. Time elapsed: ${time} seconds"
+          #   if [ ${time} -gt 900 ]; then
+          #     echo "ERROR :: Timeout waiting for SSL certs to be generated on $INSTANCE_PUBLIC_IP"
+          #     ssh -oStrictHostKeyChecking=no -i $GITHUB_WORKSPACE/ssh_private_key ubuntu@$INSTANCE_PUBLIC_IP "cat /var/log/cloud-init-output.log"
+          #     exit 1
+          #   fi
+          # done
+          # ## get the generated cert
+          # scp -oStrictHostKeyChecking=no -i $GITHUB_WORKSPACE/ssh_private_key \
+          #   ubuntu@$INSTANCE_PUBLIC_IP:/manual-letsencrypt/letsencrypt/letsencrypt-keys/live/${{inputs.ROUTE53_RECORD_NAME}}.${{inputs.ROUTE53_ZONE_NAME}}/"{fullchain.pem,privkey.pem}" \
+          #   $GITHUB_WORKSPACE/caller-repo/${{inputs.CALLER_REPO_SUBPATH_FOR_CERT}}
+          # ls -lah $GITHUB_WORKSPACE/caller-repo/${{inputs.CALLER_REPO_SUBPATH_FOR_CERT}}
+          # terraform destroy -auto-approve -var-file=input.tfvars -input=false
 
           cd $GITHUB_WORKSPACE/caller-repo
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           NEW_BRANCH=cert-update-$(date '+%Y-%m-%d')
           git switch -c $NEW_BRANCH
+          echo "test" >> ${{inputs.CALLER_REPO_SUBPATH_FOR_CERT}}/test.pem
           git add .
           git status
           git commit -m "Update cert $(date '+%Y-%m-%d')"

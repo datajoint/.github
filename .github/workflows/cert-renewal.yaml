@@ -98,28 +98,28 @@ jobs:
 
           terraform init
           terraform plan -var-file=input.tfvars -input=false
-          # terraform apply -auto-approve -var-file=input.tfvars -input=false
-          # ## get the instance public ip
-          # INSTANCE_PUBLIC_IP=$(terraform output -raw auto-letsencrypt-instance-public-ip)
-          # ## check if the cert is ready
-          # time=0
-          # while [ $(ssh -i $GITHUB_WORKSPACE/ssh_private_key ubuntu@$INSTANCE_PUBLIC_IP "cloud-init status") != "status: done" ]
-          # do
-          #   sleep 60
-          #   time=$((time+60))
-          #   echo "INFO :: Waiting for SSL certs to be generated. Time elapsed: $${time} seconds"
-          #   if [ $${time} -gt 900 ]; then
-          #     echo "ERROR :: Timeout waiting for SSL certs to be generated on $INSTANCE_PUBLIC_IP"
-          #     ssh -i $GITHUB_WORKSPACE/ssh_private_key ubuntu@$INSTANCE_PUBLIC_IP "cat /var/log/cloud-init-output.log"
-          #     exit 1
-          #   fi
-          # done
-          # ## get the generated cert
-          # scp -i $GITHUB_WORKSPACE/ssh_private_key \
-          #   ubuntu@$INSTANCE_PUBLIC_IP:/manual-letencrypt/letsencrypt/letsencrypt-keys/live/"{fullchain.pem,prikey.pem}" \
-          #   $GITHUB_WORKSPACE/caller-repo/${{inputs.CALLER_REPO_SUBPATH_FOR_CERT}}
-          # ls -lah $GITHUB_WORKSPACE/caller-repo/${{inputs.CALLER_REPO_SUBPATH_FOR_CERT}}
-          # terraform destroy -auto-approve -var-file=input.tfvars
+          terraform apply -auto-approve -var-file=input.tfvars -input=false
+          ## get the instance public ip
+          INSTANCE_PUBLIC_IP=$(terraform output -raw auto-letsencrypt-instance-public-ip)
+          ## check if the cert is ready
+          time=0
+          while [ $(ssh -i $GITHUB_WORKSPACE/ssh_private_key ubuntu@$INSTANCE_PUBLIC_IP "cloud-init status") != "status: done" ]
+          do
+            sleep 60
+            time=$((time+60))
+            echo "INFO :: Waiting for SSL certs to be generated. Time elapsed: $${time} seconds"
+            if [ $${time} -gt 900 ]; then
+              echo "ERROR :: Timeout waiting for SSL certs to be generated on $INSTANCE_PUBLIC_IP"
+              ssh -i $GITHUB_WORKSPACE/ssh_private_key ubuntu@$INSTANCE_PUBLIC_IP "cat /var/log/cloud-init-output.log"
+              exit 1
+            fi
+          done
+          ## get the generated cert
+          scp -i $GITHUB_WORKSPACE/ssh_private_key \
+            ubuntu@$INSTANCE_PUBLIC_IP:/manual-letencrypt/letsencrypt/letsencrypt-keys/live/"{fullchain.pem,prikey.pem}" \
+            $GITHUB_WORKSPACE/caller-repo/${{inputs.CALLER_REPO_SUBPATH_FOR_CERT}}
+          ls -lah $GITHUB_WORKSPACE/caller-repo/${{inputs.CALLER_REPO_SUBPATH_FOR_CERT}}
+          terraform destroy -auto-approve -var-file=input.tfvars -input=false
 
           # cd $GITHUB_WORKSPACE/caller-repo
           # git config --global user.email "github-actions[bot]@users.noreply.github.com"

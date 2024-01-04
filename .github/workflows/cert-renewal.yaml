@@ -127,7 +127,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           NEW_BRANCH=cert-update-$(date '+%Y-%m-%d')
           git switch -c $NEW_BRANCH
-          git pull
           echo "test" >> ${{inputs.CALLER_REPO_SUBPATH_FOR_CERT}}/test.pem
           git add .
           git status

@@ -39,6 +39,8 @@ jobs:
           echo "::add-mask::$KUBECONFIG"
           echo "KUBECONFIG=$KUBECONFIG" >> $GITHUB_OUTPUT
       - name: Time window to manually cancel before deployment
+        env:
+          KUBECONFIG: ${{steps.get_kubeconfig.outputs.KUBECONFIG}}
         run: |
           # create namespace if not exists
           if [ -z "$(kubectl get ns | grep ${{ inputs.NAMESPACE }})" ]; then

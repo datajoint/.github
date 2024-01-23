@@ -10,8 +10,16 @@ on:
         description: 'namespace of the k8s cluster'
         type: string
         required: true
-      DEPLOYMENT_PATH:
-        description: 'path to the deployment yaml file'
+      SECRET_FROM_ENV_PATH:
+        description: 'path to the k8s secret from env yaml file'
+        type: string
+        required: true
+      SECRET_NAME:
+        description: 'name for the k8s secret'
+        type: string
+        required: true
+      MANIFEST_OR_FOLDER_PATH:
+        description: 'path to the manifest yaml file or folder'
         type: string
         required: true
     secrets:
@@ -50,10 +58,13 @@ jobs:
       - name: Time window to manually cancel before deployment
         run: |
           sleep 30
-      - name: Deploy to k8s
+      - name: Deploy manifest to k8s
         env:
           KUBECONFIG: ${{steps.get_kubeconfig.outputs.KUBECONFIG}}
         run: |
-          kubectl -n ${{ inputs.NAMESPACE }} apply -f ${{ github.workspace}}/${{ inputs.DEPLOYMENT_PATH }}
+          kubectl -n ${{ inputs.NAMESPACE }} create secret generic ${{ inputs.SECRET_NAME }} \
+            --from-env-file=${{ inputs.SECRET_FROM_ENV_PATH}} \
+            --dry-run=client -o yaml | kubectl apply -f -
+          kubectl -n ${{ inputs.NAMESPACE }} apply -f ${{ github.workspace}}/${{ inputs.MANIFEST_OR_FOLDER_PATH }}
           kubectl -n ${{ inputs.NAMESPACE }} get all
       

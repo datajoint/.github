@@ -54,6 +54,6 @@ jobs:
         env:
           KUBECONFIG: ${{steps.get_kubeconfig.outputs.KUBECONFIG}}
         run: |
-          sleep 30
           kubectl -n ${{ inputs.NAMESPACE }} apply -f ${{ github.workspace}}/${{ inputs.DEPLOYMENT_PATH }}
+          kubectl -n ${{ inputs.NAMESPACE }} get all
       

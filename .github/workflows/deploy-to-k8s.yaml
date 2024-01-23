@@ -39,7 +39,7 @@ jobs:
           KUBECONFIG=${{ github.workspace }}/kubeconfig
           echo "::add-mask::$KUBECONFIG"
           echo "KUBECONFIG=$KUBECONFIG" >> $GITHUB_OUTPUT
-      - name: Time window to manually cancel before deployment
+      - name: Check existing resources in the namespace
         env:
           KUBECONFIG: ${{steps.get_kubeconfig.outputs.KUBECONFIG}}
         run: |
@@ -49,10 +49,13 @@ jobs:
             echo "INFO:: Created namespace ${{ inputs.NAMESPACE }}"
           fi
           kubectl -n ${{ inputs.NAMESPACE }} get all
+      - name: Time window to manually cancel before deployment
+        run: |
           sleep 30
       - name: Deploy to k8s
         env:
           KUBECONFIG: ${{steps.get_kubeconfig.outputs.KUBECONFIG}}
         run: |
+          sleep 30
           kubectl -n ${{ inputs.NAMESPACE }} apply -f ${{ github.workspace}}/caller_repo/${{ inputs.DEPLOYMENT_PATH }}
       

@@ -1,0 +1,42 @@
+name: cert-renewal
+on:
+  workflow_call:
+    inputs:
+      KUBECTL_VERSION:
+        description: 'kubectl version'
+        type: string
+        required: true
+      DEPLOYMENT_PATH:
+        description: 'path to the deployment yaml file'
+        type: string
+        required: true
+    secrets:
+      KUBE_CONFIG_BASE64:
+        description: 'kube config file in base64 encoded'
+        required: true
+
+jobs:
+  deploy-k8s:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout caller repo
+        uses: actions/checkout@v4
+        with:
+          path: caller-repo
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: ${{ inputs.KUBECTL_VERSION }}
+        id: install
+      - name: Get KUBECONFIG
+        id: get_kubeconfig
+        run: |
+          KUBECONFIG=$(cat ${{ secrets.KUBE_CONFIG_BASE64 }} | base64 -d)
+          echo "::add-mask::$KUBECONFIG"
+          echo "KUBECONFIG=$KUBECONFIG" >> $GITHUB_OUTPUT
+      - name: Deploy to k8s
+        env:
+          KUBECONFIG: ${{steps.get_kubeconfig.outputs.KUBECONFIG}}
+        run: |
+          kubectl apply -f ${{ inputs.DEPLOYMENT_PATH }}
+      

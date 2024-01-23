@@ -35,7 +35,8 @@ jobs:
       - name: Get KUBECONFIG
         id: get_kubeconfig
         run: |
-          KUBECONFIG=$(echo "${{ secrets.KUBE_CONFIG_BASE64 }}" | base64 -d)
+          echo "${{ secrets.KUBE_CONFIG_BASE64 }}" | base64 -d >> ${{ github.workspace }}/kubeconfig
+          KUBECONFIG=${{ github.workspace }}/kubeconfig
           echo "::add-mask::$KUBECONFIG"
           echo "KUBECONFIG=$KUBECONFIG" >> $GITHUB_OUTPUT
       - name: Time window to manually cancel before deployment

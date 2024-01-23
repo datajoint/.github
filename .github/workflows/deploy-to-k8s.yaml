@@ -54,5 +54,5 @@ jobs:
         env:
           KUBECONFIG: ${{steps.get_kubeconfig.outputs.KUBECONFIG}}
         run: |
-          kubectl -n ${{ inputs.NAMESPACE }} apply -f ${{ inputs.DEPLOYMENT_PATH }}
+          kubectl -n ${{ inputs.NAMESPACE }} apply -f ${{ github.workspace}}/caller_repo/${{ inputs.DEPLOYMENT_PATH }}
       

@@ -1,4 +1,4 @@
-name: cert-renewal
+name: deploy-at-k8s
 on:
   workflow_call:
     inputs:

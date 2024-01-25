@@ -1,0 +1,66 @@
+name: deploy-to-k8s
+on:
+  workflow_call:
+    inputs:
+      KUBECTL_VERSION:
+        description: 'kubectl version'
+        type: string
+        required: true
+      NAMESPACE:
+        description: 'namespace of the k8s cluster'
+        type: string
+        required: true
+      SECRET_FROM_ENV_PATH:
+        description: 'path to the k8s secret from env yaml file'
+        type: string
+      SECRET_NAME:
+        description: 'name for the k8s secret'
+        type: string
+      MANIFEST_OR_FOLDER_PATH:
+        description: 'path to the manifest yaml file or folder'
+        type: string
+        required: true
+    secrets:
+      KUBE_CONFIG_BASE64:
+        description: 'kube config file in base64 encoded'
+        required: true
+
+jobs:
+  deploy-k8s:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout caller repo
+        uses: actions/checkout@v4
+      - name: Check Paths
+        run: ls -la ${{ inputs.SECRET_FROM_ENV_PATH}} ${{ github.workspace}}/${{ inputs.MANIFEST_OR_FOLDER_PATH }} || { echo "Check paths for env file and manifest/folder"; exit 1; }
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: ${{ inputs.KUBECTL_VERSION }}
+        id: install
+      - name: Get KUBECONFIG
+        id: get_kubeconfig
+        run: |
+          echo "${{ secrets.KUBE_CONFIG_BASE64 }}" | base64 -d >> ${{ github.workspace }}/kubeconfig
+          KUBECONFIG=${{ github.workspace }}/kubeconfig
+          echo "::add-mask::$KUBECONFIG"
+          echo "KUBECONFIG=$KUBECONFIG" >> $GITHUB_ENV
+      - name: Check existing resources in the namespace
+        run: |
+          # create namespace if not exists
+          if [ -z "$(kubectl get ns | grep ${{ inputs.NAMESPACE }})" ]; then
+            kubectl create ns ${{ inputs.NAMESPACE }}
+            echo "INFO:: Created namespace ${{ inputs.NAMESPACE }}"
+          fi
+          kubectl -n ${{ inputs.NAMESPACE }} get all
+      - name: Time window to manually cancel before deployment
+        run: |
+          sleep 30
+      - name: Deploy manifest to k8s
+        run: |
+          kubectl -n ${{ inputs.NAMESPACE }} create secret generic ${{ inputs.SECRET_NAME }} \
+            --from-env-file=${{ inputs.SECRET_FROM_ENV_PATH}} \
+            --dry-run=client -o yaml | kubectl apply -f -
+          kubectl -n ${{ inputs.NAMESPACE }} apply -f ${{ github.workspace}}/${{ inputs.MANIFEST_OR_FOLDER_PATH }}
+          kubectl -n ${{ inputs.NAMESPACE }} get all
+      

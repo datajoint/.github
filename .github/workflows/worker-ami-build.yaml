@@ -64,8 +64,8 @@ jobs:
           path: 'dj-gitops'
       - name: Call fetcher
         run: |
-          ls -la ~/dj-gitops/infrastructures/tf/workers_management-wip/worker_manager
-          ls -la ~/dj-gitops/infrastructures/packer/worker_ami/inputs
+          ls -la ${GITHUB_WORKSPACE}/dj-gitops/infrastructures/tf/workers_management-wip/worker_manager
+          ls -la ${GITHUB_WORKSPACE}/dj-gitops/infrastructures/packer/worker_ami/inputs
       - name: Build worker AMI
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.BUILD_AWS_ACCESS_KEY_ID }}
@@ -76,8 +76,8 @@ jobs:
           DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
         run: |
           # Set up deploy SSH key
-          echo -n "${{ secrets.DEPLOY_SSH_KEY_BASE64 }}" | base64 -d > ~/dj-gitops/infrastructures/packer/worker_ami/keys/dj-sciops-devops-bot.pem
-          ls -la ~/dj-gitops/infrastructures/packer/worker_ami
+          echo -n "${{ secrets.DEPLOY_SSH_KEY_BASE64 }}" | base64 -d > ${GITHUB_WORKSPACE}/dj-gitops/infrastructures/packer/worker_ami/keys/dj-sciops-devops-bot.pem
+          ls -la ${GITHUB_WORKSPACE}/dj-gitops/infrastructures/packer/worker_ami
       - name: Update worker AMI metadata
         run: |
           echo "run sql"

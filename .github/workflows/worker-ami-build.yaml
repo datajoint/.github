@@ -2,6 +2,9 @@ name: worker-ami-build
 on:
   workflow_call:
     inputs:
+      worker_type:
+        required: true
+        type: string
       workflow_version:
         required: true
         type: string

@@ -18,11 +18,11 @@ on:
         required: true
       RUNNER_AWS_SECRET_ACCESS_KEY:
         required: true
-      DB_HOST:
+      DJ_HOST:
         required: true
-      DB_USER:
+      DJ_USER:
         required: true
-      DB_PASS:
+      DJ_PASS:
         required: true
       BUILD_PAT:
         required: true

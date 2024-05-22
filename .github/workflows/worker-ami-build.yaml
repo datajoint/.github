@@ -88,6 +88,7 @@ jobs:
           WORKFLOW_VERSION: ${{ inputs.workflow_version }}
           STAGING: ${{ inputs.staging }}
         run: |
+          export REPO_NAME=$(echo ${REPO_NAME} | cut -d "/" -f 2)
           export ORG_NAME=$(echo ${REPO_NAME} | cut -d "_" -f 1)
           export WORKFLOW_NAME=$(echo ${REPO_NAME} | cut -d "_" -f 2)
           pip install datajoint
@@ -105,6 +106,7 @@ jobs:
           DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
         run: |
           # Set up deploy SSH key
+          export REPO_NAME=$(echo ${REPO_NAME} | cut -d "/" -f 2)
           echo -n "${{ secrets.DEPLOY_SSH_KEY_BASE64 }}" | base64 -d > ${GITHUB_WORKSPACE}/dj-gitops/infrastructures/packer/worker_ami/keys/${REPO_NAME}-deploy.pem
           cd ${GITHUB_WORKSPACE}/dj-gitops/infrastructures/packer/worker_ami
           packer init .

@@ -1,8 +1,6 @@
 {
     "conventionalCommits.scopes": [
-        "U24 Element",
-        "U24 Workflow",
         "reusable-workflows",
-        "codebook_docker_template"
+        "starter-workflows"
     ]
 }

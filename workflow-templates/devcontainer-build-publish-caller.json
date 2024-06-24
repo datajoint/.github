@@ -1,0 +1,4 @@
+{
+  "name": "devcontainer-build-publish-caller",
+  "description": "Datajoint devcontainer build and publish caller"
+}

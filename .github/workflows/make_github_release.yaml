@@ -1,4 +1,4 @@
-name: make_github_release
+name: Deprecated:make_github_release
 on:
   workflow_call:
     outputs:
@@ -11,6 +11,9 @@ jobs:
     outputs:
       gh_release_upload_url: ${{ steps.get_release_upload_url.outputs.upload_url }}
     steps:
+      - name: Deprecation Warning
+      run: |
+        echo "This action is deprecated. Please use the 'Semantic Release' reusable workflow instead."
       - uses: actions/checkout@v3
       - name: Set up Python
         uses: actions/setup-python@v4

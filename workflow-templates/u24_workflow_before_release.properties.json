@@ -1,4 +1,0 @@
-{
-    "name": "u24_workflow_before_release",
-    "description": "U24 workflow CI triggered by every push or open PR"
-}

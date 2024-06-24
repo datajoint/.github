@@ -1,4 +1,4 @@
-name: Publish DevContainer Image
+name: Deprecated:Publish DevContainer Image
 on:
   workflow_call:
     secrets:
@@ -10,6 +10,9 @@ jobs:
   devcontainer-publish:
     runs-on: ubuntu-latest
     steps:
+    - name: Deprecation Warning
+      run: |
+        echo "This action is deprecated. Please use the 'Build and Publish DevContainer Image' reusable workflow instead."
     - uses: actions/checkout@v3
     - name: Install dependencies
       run: |

@@ -1,4 +1,0 @@
-{
-    "name": "u24_element_before_release",
-    "description": "U24 element CI triggered by every push or open PR"
-}

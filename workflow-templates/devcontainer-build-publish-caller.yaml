@@ -1,11 +1,6 @@
 name: devcontainer_build_publish
 on:
   workflow_dispatch:
-    secrets:
-      DOCKERHUB_USERNAME:
-        required: true
-      DOCKERHUB_TOKEN:
-        required: true
 
 jobs:
   call_devcontainer_build_publish:

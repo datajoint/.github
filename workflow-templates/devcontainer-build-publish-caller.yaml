@@ -1,4 +1,4 @@
-name: semantic-release
+name: devcontainer_build_publish
 on:
   workflow_dispatch:
     secrets:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   call_devcontainer_build_publish:
-    uses: dj-sciops/.github/.github/workflows/devcontainer-build-publish.yaml@main
+    uses: datajoint/.github/.github/workflows/devcontainer-build-publish.yaml@main
     with:
       DOCKERHUB_USERNAME: ${{secrets.DOCKERHUB_USERNAME}}
       DOCKERHUB_TOKEN: ${{secrets.DOCKERHUB_TOKEN}}

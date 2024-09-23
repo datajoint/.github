@@ -23,8 +23,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
           # fixed: https://github.com/python-semantic-release/python-semantic-release/issues/721
+          fetch-depth: 0
+          token: ${{ steps.generate_token.outputs.token }}
       - name: Find version.py
         id: find_version_dot_py
         run: |

@@ -1,15 +1,27 @@
 name: semantic-release
 on:
   workflow_call:
+    inputs:
+      APP_ID:
+        description: 'Github App ID'
+        required: true
+        type: string
+      GET_TOKEN_KEY:
+        description: 'Private key to get Github App token'
+        required: true
+        type: string
     
 jobs:
   release:
     runs-on: ubuntu-latest
     concurrency: release
-    permissions:
-      id-token: write
-      contents: write 
     steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ inputs.APP_ID }}
+          private_key: ${{ inputs.GET_TOKEN_KEY }}
       - name: Checkout code
         uses: actions/checkout@v2
         with:
@@ -90,5 +102,5 @@ jobs:
       - name: Python Semantic Release
         uses: python-semantic-release/python-semantic-release@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ steps.generate_token.outputs.token }}
           root_options: "-c .semantic-release.toml -v"

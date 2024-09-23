@@ -5,11 +5,9 @@ on:
       APP_ID:
         description: 'Github App ID'
         required: true
-        type: string
       GET_TOKEN_KEY:
         description: 'Private key to get Github App token'
         required: true
-        type: string
     
 jobs:
   release:

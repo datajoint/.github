@@ -1,7 +1,7 @@
 name: semantic-release
 on:
   workflow_call:
-    inputs:
+    secrets:
       APP_ID:
         description: 'Github App ID'
         required: true

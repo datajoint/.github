@@ -135,5 +135,14 @@ jobs:
           gh pr create -b master -H $NEW_BRANCH \
             --title "Update cert $(date '+%Y-%m-%d')" --body "Update cert $(date '+%Y-%m-%d')" \
             --reviewer ${{inputs.PR_REVIEWERS}}
+      - name: Terminate resources
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        if: always()
+        run: |
+          cd $GITHUB_WORKSPACE/manual-letsencrypt/terraform
+          terraform destroy -auto-approve -var-file=input.tfvars -input=false
 
       

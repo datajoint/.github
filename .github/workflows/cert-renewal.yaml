@@ -104,7 +104,7 @@ jobs:
           echo $INSTANCE_PUBLIC_IP
           ## check if the cert is ready
           time=0
-          while [[ $(ssh -oStrictHostKeyChecking=no -i $GITHUB_WORKSPACE/ssh_private_key ubuntu@$INSTANCE_PUBLIC_IP "ls -A /manual-letsencrypt/letsencrypt/letsencrypt-keys/live/${{inputs.ROUTE53_RECORD_NAME}}.${{inputs.ROUTE53_ZONE_NAME}}/") ]]
+          while [[ $(ssh -oStrictHostKeyChecking=no -i $GITHUB_WORKSPACE/ssh_private_key ubuntu@$INSTANCE_PUBLIC_IP "ls -A /manual-letsencrypt/letsencrypt/letsencrypt-keys/live/${{inputs.ROUTE53_RECORD_NAME}}.${{inputs.ROUTE53_ZONE_NAME}}/ 2>/dev/null") ]]
           do
             sleep 60
             time=$((time+60))

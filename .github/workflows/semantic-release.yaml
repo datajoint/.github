@@ -58,6 +58,8 @@ jobs:
           template_dir = "templates"
           changelog_file = "CHANGELOG.md"
           exclude_commit_patterns = [
+              # use this at local "^(build|chore|ci|style|test)(\\(.*\\))?:.*"
+              # have to add more slash to escape github actions auto escape...
               "^(build|chore|ci|style|test)(\\\\(.*\\\\))?:.*" #
           ]
 

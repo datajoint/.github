@@ -58,7 +58,7 @@ jobs:
           template_dir = "templates"
           changelog_file = "CHANGELOG.md"
           exclude_commit_patterns = [
-              "^(build|chore|ci|style|test)(\\(.*\\))?:.*" #
+              "^(build|chore|ci|style|test)(\\\\(.*\\\\))?:.*" #
           ]
 
           [tool.semantic_release.changelog.environment]

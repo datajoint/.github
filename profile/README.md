@@ -1,6 +1,6 @@
 # Welcome to DataJoint!
 
-DataJoint for Python is an open-source framework for scientific data pipelines based on the relational data model. DataJoint prescribes a consistent method for organizing, populating, computing, and querying data.
+DataJoint is a Python framework for scientific data pipelines built on the **Relational Workflow Model**—a paradigm where your database schema is an executable specification of your workflow.
 
 In this GitHub Organization, you will find the source code for DataJoint, as well as tutorials and example pipelines.
 
@@ -8,24 +8,28 @@ In this GitHub Organization, you will find the source code for DataJoint, as wel
 
 ![pipeline](https://raw.githubusercontent.com/datajoint/datajoint-python/master/images/pipeline.png)
 
-[Yatsenko et al., bioRxiv 2021](https://doi.org/10.1101/2021.03.30.437358)
+[Yatsenko et al., arXiv 2023](https://doi.org/10.48550/arXiv.2303.00102)
 
 ## Getting Started
 
-- Install with Conda
-
-     ```bash
-     conda install -c conda-forge datajoint
-     ```
-
-- Install with pip
+- **Install with pip**
 
      ```bash
      pip install datajoint
      ```
 
-- [Documentation & Tutorials](https://datajoint.com/docs/core/datajoint-python/)
+- **Install with Conda**
 
-- [Interactive Tutorials](https://github.com/datajoint/datajoint-tutorials) on GitHub Codespaces
+     ```bash
+     conda install -c conda-forge datajoint
+     ```
 
-- [DataJoint Elements](https://datajoint.com/docs/elements/) - Catalog of example pipelines for neuroscience experiments
+- **[Documentation](https://docs.datajoint.com)** - Tutorials, how-to guides, explanations, and API reference
+
+- **[Migration Guide](https://docs.datajoint.com/how-to/migrate-to-v20/)** - Upgrading to DataJoint 2.0
+
+- **[DataJoint Elements](https://docs.datajoint.com/elements/)** - Reusable pipeline modules for neurophysiology experiments
+
+## DataJoint 2.0
+
+DataJoint 2.0 is a major release with significant improvements. Existing pipelines require migration—see the [Migration Guide](https://docs.datajoint.com/how-to/migrate-to-v20/) for upgrade instructions.

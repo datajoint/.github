@@ -2,6 +2,9 @@ name: mkdocs-release
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   mkdocs_release:
     uses: datajoint/.github/.github/workflows/mkdocs_release.yaml@main

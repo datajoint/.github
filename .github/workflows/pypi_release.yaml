@@ -12,9 +12,14 @@ on:
       TWINE_PASSWORD:
         required: true
 
+permissions:
+  contents: read
+
 jobs:
   pypi-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     strategy:
       matrix:
         py_ver: ["3.9"]
@@ -24,9 +29,11 @@ jobs:
       TWINE_PASSWORD: ${{secrets.TWINE_PASSWORD}}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - name: Set up Python ${{matrix.py_ver}}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4.9.1
         with:
           python-version: ${{matrix.py_ver}}
       - name: Determine package version
@@ -45,7 +52,7 @@ jobs:
           echo "PKG_WHEEL_PATH=$(ls dist/${PKG_NAME}-*.whl)" >> $GITHUB_ENV
           echo "PKG_SDIST_PATH=$(ls dist/${SDIST_PKG_NAME}-*.tar.gz)" >> $GITHUB_ENV
       - name: Upload pip wheel asset to release
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@e8f9f06c4b078e705bd2ea027f0926603fc9b4d5 # v1.0.2
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
@@ -54,7 +61,7 @@ jobs:
           asset_name: pip-${{env.PKG_NAME}}-${{env.PKG_VERSION}}.whl
           asset_content_type: application/zip
       - name: Upload pip sdist asset to release
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@e8f9f06c4b078e705bd2ea027f0926603fc9b4d5 # v1.0.2
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:

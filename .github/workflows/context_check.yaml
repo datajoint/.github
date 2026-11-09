@@ -2,6 +2,8 @@ name: context_check
 on:
   workflow_call:
 
+permissions: {}
+
 jobs:
   context_check:
     runs-on: ubuntu-latest

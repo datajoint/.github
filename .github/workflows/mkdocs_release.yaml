@@ -2,14 +2,21 @@ name: mkdocs_release
 on:
   workflow_call:
 
+permissions:
+  contents: read
+
 jobs:
   mkdocs-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - name: Deploy docs
         run: |
           REPO_HYPHENS=${GITHUB_REPOSITORY##*/}

@@ -9,6 +9,9 @@ on:
         description: 'Private key to get Github App token'
         required: true
     
+permissions:
+  contents: read
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -16,16 +19,19 @@ jobs:
     steps:
       - name: Generate token
         id: generate_token
-        uses: tibdex/github-app-token@v1
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
         with:
-          app_id: ${{ secrets.APP_ID }}
-          private_key: ${{ secrets.GET_TOKEN_KEY }}
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.GET_TOKEN_KEY }}
+          # With no owner/repositories inputs, the token is scoped to the calling repository only.
+          permission-contents: write
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           # fixed: https://github.com/python-semantic-release/python-semantic-release/issues/721
           fetch-depth: 0
           token: ${{ steps.generate_token.outputs.token }}
+          persist-credentials: false
       - name: Find version.py
         id: find_version_dot_py
         run: |
@@ -121,7 +127,7 @@ jobs:
 
           git config --global --add safe.directory ${PWD}
       - name: Python Semantic Release
-        uses: python-semantic-release/python-semantic-release@master
+        uses: python-semantic-release/python-semantic-release@b700dbeb1f431a0fcc30a79f3f0869407fe07278 # v10.7.0
         with:
           github_token: ${{ steps.generate_token.outputs.token }}
           root_options: "-c .semantic-release.toml -v"

@@ -52,22 +52,30 @@ on:
         description: 'ssh private key to access the instance in base64 encoded'
         required: true
 
+permissions:
+  contents: read
+
 jobs:
   cert-renewal:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout caller repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           path: caller-repo
+          # credentials are kept: a later step pushes the cert branch with them
       - name: Checkout manual-letsencrypt
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           repository: ${{inputs.MANUAL_LETSENCRYPT_REPO}}
           ref: ${{inputs.MANUAL_LETSENCRYPT_BRANCH}}
           path: manual-letsencrypt
+          persist-credentials: false
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
       - name: Run terraform, get cert, and make PR
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -94,7 +102,6 @@ jobs:
           manual_letsencrypt_repo = "${{inputs.MANUAL_LETSENCRYPT_REPO}}"
           manual_letsencrypt_branch = "${{inputs.MANUAL_LETSENCRYPT_BRANCH}}"
           EOF
-          cat input.tfvars
 
           terraform init
           terraform plan -var-file=input.tfvars -input=false

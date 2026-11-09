@@ -1,6 +1,8 @@
 name: Deprecated:Build DevContainer Image
 on:
   workflow_call:
+permissions:
+  contents: read
 jobs:
   devcontainer-build:
     runs-on: ubuntu-latest
@@ -8,7 +10,9 @@ jobs:
     - name: Deprecation Warning
       run: |
         echo "This action is deprecated. Please use the 'Build and Publish DevContainer Image' reusable workflow instead."
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      with:
+        persist-credentials: false
     - name: Install dependencies
       run: |
         sudo curl https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64\
@@ -26,7 +30,7 @@ jobs:
         docker save "${IMAGE}" | \
             gzip > "image-devcontainer-${PIP_PACKAGE_NAME}.tar.gz"
     - name: Upload image artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
       with:
         name: image-devcontainer-${{env.PIP_PACKAGE_NAME}}
         path: "image-devcontainer-${{env.PIP_PACKAGE_NAME}}.tar.gz"

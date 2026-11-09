@@ -2,6 +2,9 @@ name: devcontainer_build_publish
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   call_devcontainer_build_publish:
     uses: datajoint/.github/.github/workflows/devcontainer-build-publish.yaml@main

@@ -34,7 +34,7 @@ jobs:
     - name: Load image
       run: docker load < "image-devcontainer-${PIP_PACKAGE_NAME}.tar.gz"
     - name: Login to Docker Hub
-      uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2.2.0
+      uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
       with:
         username: ${{secrets.DOCKERHUB_USERNAME}}
         password: ${{secrets.DOCKERHUB_TOKEN}}
